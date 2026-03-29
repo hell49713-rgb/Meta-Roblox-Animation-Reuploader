@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>META</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Setup Screen -->
+    <div class="setup-screen" id="setup-screen">
+        <div class="setup-logo-container">
+            <img src="../assets/META-logo.png" alt="META Logo" class="setup-logo">
+            <h1 class="setup-title" id="setup-title">SETUP</h1>
+        </div>
+        
+        <div class="setup-content">
+            <div class="step" id="step-dependencies">
+                <h2>Step 1: Install Dependencies</h2>
+                <p>Click the button below to install required Node.js packages.</p>
+                <button class="setup-btn" id="install-deps-btn">Install Dependencies</button>
+                <div class="status-message" id="deps-status"></div>
+            </div>
+
+            <div class="step hidden" id="step-cookie">
+                <h2>Step 2: Enter Your Cookie</h2>
+                <p>Paste your Roblox .ROBLOSECURITY cookie below:</p>
+                <textarea 
+                    id="cookie-input" 
+                    class="cookie-input" 
+                    placeholder="Paste your .ROBLOSECURITY cookie here (must include WARNING text)..."
+                    rows="6"
+                ></textarea>
+                <button class="setup-btn" id="save-cookie-btn">Save Cookie</button>
+                <div class="status-message" id="cookie-status"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="main-app hidden" id="main-app">
+        <div class="app-header">
+            <div class="header-left">
+                <img src="../assets/META-logo.png" alt="META" class="app-logo">
+                <span class="spoofer-text">
+                    <span class="spoofer-letter">S</span>
+                    <span class="spoofer-letter">p</span>
+                    <span class="spoofer-letter">o</span>
+                    <span class="spoofer-letter">o</span>
+                    <span class="spoofer-letter">f</span>
+                    <span class="spoofer-letter">e</span>
+                    <span class="spoofer-letter">r</span>
+                </span>
+            </div>
+            <div class="header-right">
+                <button id="open-accounts-btn" class="header-action-btn">Accounts</button>
+                <button id="theme-toggle" class="theme-toggle">Dark</button>
+            </div>
+        </div>
+
+        <div class="app-content">
+            <div class="status-section">
+                <div class="status-label">Authenticated as:</div>
+                <div class="status-value">
+                    <span class="username" id="username">Loading...</span>
+                    <span class="display-name" id="display-name"></span>
+                </div>
+            </div>
+
+            <div class="connection-status">
+                <span id="status-text" class="status-text connected">Loading...</span>
+            </div>
+
+            <div class="upload-section">
+                <label class="section-label" for="target-select">Upload to:</label>
+                <select id="target-select" class="target-select">
+                    <option value="user">Personal Account</option>
+                </select>
+            </div>
+
+            <div class="upload-section">
+                <label class="section-label" for="mode-select">Mode:</label>
+                <select id="mode-select" class="mode-select">
+                    <option value="animation">Animation</option>
+                    <option value="audio">Audio</option>
+                    <option value="script">Script</option>
+                </select>
+            </div>
+
+            <div class="upload-section checkbox-section">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="make-public-toggle">
+                    <span class="checkmark"></span>
+                    <span class="checkbox-label">Make Public (Free-to-use)</span>
+                </label>
+            </div>
+
+            <div class="run-section">
+                <button class="run-btn" id="run-meta-btn">
+                    <span class="run-icon">▶</span>
+                    Run META
+                </button>
+                <p class="run-hint">Click to inject and run the spoofer in Studio.</p>
+            </div>
+
+            <div class="logs-section">
+                <div class="logs-header">Logs</div>
+                <div id="logs" class="logs-content">Ready to spoof...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Manager Modal -->
+    <div id="accounts-modal" class="modal hidden">
+        <div class="modal-content accounts-modal-content">
+            <h3 class="modal-title">Account Manager</h3>
+            <div id="accounts-list" class="accounts-list">
+                <!-- Accounts will be populated here -->
+            </div>
+            
+            <div class="add-account-section">
+                <h4>Add New Account</h4>
+                <input type="text" id="new-account-alias" class="account-input" placeholder="Alias (e.g. Main)">
+                <textarea id="new-account-cookie" class="account-input cookie-area" placeholder="Paste .ROBLOSECURITY cookie here..."></textarea>
+                <button id="add-account-btn" class="modal-btn modal-btn-primary">Add Account</button>
+            </div>
+            
+            <div class="modal-buttons">
+                <button id="close-accounts-btn" class="modal-btn modal-btn-secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirm-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 class="modal-title">Switch Account</h3>
+            <p class="modal-message">Are you sure you want to switch accounts?</p>
+            <div class="modal-buttons">
+                <button id="confirm-yes" class="modal-btn modal-btn-primary">Switch Account</button>
+                <button id="confirm-no" class="modal-btn modal-btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div id="completion-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 class="modal-title">META Complete</h3>
+            <p class="modal-message">All assets have been successfully reuploaded!</p>
+            <div class="modal-buttons">
+                <button id="completion-ok" class="modal-btn modal-btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

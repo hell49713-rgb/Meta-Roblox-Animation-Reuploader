@@ -1,0 +1,61 @@
+{
+  "name": "meta-spoofer",
+  "version": "2.0.0",
+  "description": "META Animation Spoofer - The Rework",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "electron .",
+    "dev": "node src/backend/index-electron.mjs",
+    "build": "electron-builder",
+    "release": "BUILD_RELEASE.bat"
+  },
+  "author": "Almos and Xix",
+  "license": "MIT",
+  "build": {
+    "appId": "com.meta.spoofer",
+    "productName": "META",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!dist",
+      "!setup-app",
+      "!.git",
+      "!*.md",
+      "!*.bat"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/META-logo.png"
+    },
+    "portable": {
+      "artifactName": "META.exe"
+    },
+    "compression": "maximum",
+    "asar": false
+  },
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "cli-progress": "^3.12.0",
+    "cli-table3": "^0.6.5",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "figlet": "^1.11.0",
+    "gradient-string": "^3.0.0",
+    "open": "^10.2.0",
+    "ora": "^9.3.0"
+  },
+  "devDependencies": {
+    "electron": "^41.1.0",
+    "electron-builder": "^24.13.3"
+  }
+}

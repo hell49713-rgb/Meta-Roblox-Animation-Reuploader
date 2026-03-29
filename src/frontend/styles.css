@@ -1,0 +1,1487 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f5f5;
+    color: #1a1a1a;
+    transition: background 0.3s, color 0.3s;
+    overflow: hidden;
+}
+
+body.dark-theme {
+    background: #0a0a0a;
+    color: #ffffff;
+}
+
+/* Setup Screen */
+.setup-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow-y: auto;
+    padding: 40px 20px;
+}
+
+.setup-screen::-webkit-scrollbar {
+    width: 6px;
+}
+
+.setup-screen::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.setup-screen::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+body.dark-theme .setup-screen::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.setup-screen.hidden {
+    display: none;
+}
+
+.setup-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.setup-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    animation: logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.setup-title {
+    font-size: 56px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: -1px;
+    display: flex;
+}
+
+body.dark-theme .setup-title {
+    color: #ffffff;
+}
+
+.setup-title-letter {
+    display: inline-block;
+    animation: letterBounce 3s ease-in-out infinite;
+}
+
+@keyframes letterBounce {
+    0%, 100% { transform: translateY(0); }
+    10% { transform: translateY(-8px); }
+    20% { transform: translateY(0); }
+}
+
+.setup-content {
+    width: 100%;
+    max-width: 400px;
+}
+
+.step {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-theme .step {
+    background: #1a1a1a;
+}
+
+.step.hidden {
+    display: none;
+}
+
+.step h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+}
+
+body.dark-theme .step h2 {
+    color: #ffffff;
+}
+
+.step p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+body.dark-theme .step p {
+    color: #999;
+}
+
+.cookie-input {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    resize: vertical;
+    background: #fff;
+    color: #333;
+    transition: all 0.2s;
+    margin-bottom: 16px;
+}
+
+.cookie-input:focus {
+    outline: none;
+    border-color: #1a1a1a;
+    box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+}
+
+.cookie-input::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+body.dark-theme .cookie-input {
+    background: #0a0a0a;
+    border-color: #333;
+    color: #fff;
+}
+
+body.dark-theme .cookie-input:focus {
+    border-color: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .cookie-input::placeholder {
+    color: #666;
+}
+
+.setup-btn {
+    width: 100%;
+    padding: 12px 24px;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.setup-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.setup-btn:hover::before {
+    width: 500px;
+    height: 500px;
+}
+
+.setup-btn:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.setup-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.setup-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+body.dark-theme .setup-btn {
+    background: #f5f5f5;
+    color: #1a1a1a;
+}
+
+body.dark-theme .setup-btn::before {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+body.dark-theme .setup-btn:hover {
+    background: #e0e0e0;
+}
+
+.status-message {
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    display: none;
+}
+
+.status-message.visible {
+    display: block;
+}
+
+.status-message.success {
+    background: #e0ffe0;
+    border: 1px solid #00cc00;
+    color: #008800;
+}
+
+.status-message.error {
+    background: #ffe0e0;
+    border: 1px solid #ff6666;
+    color: #cc0000;
+}
+
+.status-message.info {
+    background: #e0f0ff;
+    border: 1px solid #66aaff;
+    color: #0066cc;
+}
+
+body.dark-theme .status-message.success {
+    background: #113311;
+    border-color: #00cc00;
+    color: #00ff00;
+}
+
+body.dark-theme .status-message.error {
+    background: #331111;
+    border-color: #ff6666;
+    color: #ff6666;
+}
+
+body.dark-theme .status-message.info {
+    background: #111133;
+    border-color: #66aaff;
+    color: #66aaff;
+}
+
+/* Main App */
+.main-app {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.main-app.hidden {
+    display: none;
+}
+
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fff;
+}
+
+body.dark-theme .app-header {
+    background: #0a0a0a;
+    border-bottom-color: #333;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-logo {
+    height: 60px;
+    object-fit: contain;
+    animation: logoFloat 3s ease-in-out infinite;
+}
+
+body.dark-theme .app-logo {
+    filter: invert(1);
+}
+
+.spoofer-text {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-left: -8px;
+    display: flex;
+}
+
+.spoofer-letter {
+    display: inline-block;
+    color: #1a1a1a;
+    animation: letterBounce 3s ease-in-out infinite;
+}
+
+.spoofer-letter:nth-child(1) { animation-delay: 0s; }
+.spoofer-letter:nth-child(2) { animation-delay: 0.1s; }
+.spoofer-letter:nth-child(3) { animation-delay: 0.2s; }
+.spoofer-letter:nth-child(4) { animation-delay: 0.3s; }
+.spoofer-letter:nth-child(5) { animation-delay: 0.4s; }
+.spoofer-letter:nth-child(6) { animation-delay: 0.5s; }
+.spoofer-letter:nth-child(7) { animation-delay: 0.6s; }
+
+body.dark-theme .spoofer-letter {
+    color: #ffffff;
+}
+
+.theme-toggle {
+    padding: 6px 12px;
+    background: #f5f5f5;
+    color: #1a1a1a;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-toggle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.theme-toggle:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.theme-toggle:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-theme .theme-toggle {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #333;
+}
+
+body.dark-theme .theme-toggle::before {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .theme-toggle:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+.app-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    scroll-behavior: smooth;
+}
+
+.app-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.app-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.app-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+body.dark-theme .app-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.app-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme .app-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.status-section {
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+body.dark-theme .status-section {
+    background: #1a1a1a;
+    border-color: #333;
+}
+
+.status-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+body.dark-theme .status-label {
+    color: #999;
+}
+
+.status-value {
+    font-size: 14px;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+body.dark-theme .status-value {
+    color: #ffffff;
+}
+
+.status-value .username {
+    color: #008800;
+}
+
+body.dark-theme .status-value .username {
+    color: #00ff00;
+}
+
+.status-value .display-name {
+    color: #666;
+    font-weight: 500;
+}
+
+body.dark-theme .status-value .display-name {
+    color: #999;
+}
+
+.upload-section {
+    margin-bottom: 20px;
+}
+
+.section-label {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+body.dark-theme .section-label {
+    color: #999;
+}
+
+.target-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 600;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: dropdownJitter 3s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+.target-select::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.target-select:hover::before {
+    width: 500px;
+    height: 500px;
+}
+
+@keyframes dropdownJitter {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-1px); }
+    50% { transform: translateX(1px); }
+    75% { transform: translateX(-1px); }
+}
+
+.target-select:hover {
+    border-color: #999;
+    animation: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.target-select:focus {
+    outline: none;
+    border-color: #1a1a1a;
+    animation: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.target-select:active {
+    transform: translateY(0) scale(0.98);
+    transition: transform 0.1s;
+}
+
+body.dark-theme .target-select {
+    background: #1a1a1a;
+    border-color: #333;
+    color: #fff;
+}
+
+body.dark-theme .target-select::before {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .target-select:hover {
+    border-color: #666;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .target-select:focus {
+    border-color: #fff;
+}
+
+.connection-status {
+    margin-bottom: 20px;
+    padding: 10px 16px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+body.dark-theme .connection-status {
+    background: #1a1a1a;
+    border-color: #333;
+}
+
+.status-text {
+    color: #666;
+}
+
+.status-text.connected {
+    animation: smoothColorPulse 2s ease-in-out infinite;
+}
+
+body.dark-theme .status-text {
+    color: #999;
+}
+
+body.dark-theme .status-text.connected {
+    animation: smoothColorPulseDark 2s ease-in-out infinite;
+}
+
+@keyframes smoothColorPulse {
+    0% { 
+        color: #008800;
+    }
+    50% { 
+        color: #000000;
+    }
+    100% { 
+        color: #008800;
+    }
+}
+
+@keyframes smoothColorPulseDark {
+    0% { 
+        color: #00ff00;
+    }
+    50% { 
+        color: #ffffff;
+    }
+    100% { 
+        color: #00ff00;
+    }
+}
+
+.run-section {
+    margin-bottom: 20px;
+}
+
+.run-btn {
+    width: 100%;
+    padding: 14px 24px;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.run-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.run-btn:hover::before {
+    width: 500px;
+    height: 500px;
+}
+
+.run-btn:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.run-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.run-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+body.dark-theme .run-btn {
+    background: #f5f5f5;
+    color: #1a1a1a;
+}
+
+body.dark-theme .run-btn::before {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+body.dark-theme .run-btn:hover {
+    background: #e0e0e0;
+}
+
+.run-icon {
+    font-size: 18px;
+}
+
+.run-hint {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    line-height: 1.4;
+}
+
+body.dark-theme .run-hint {
+    color: #999;
+}
+
+.logs-section {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 120px;
+    min-height: 120px;
+    max-height: 120px;
+    flex-shrink: 0;
+}
+
+.logs-header {
+    padding: 8px 12px;
+    background: #f3f3f3;
+    border: 1px solid #e0e0e0;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    flex-shrink: 0;
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    box-sizing: border-box;
+}
+
+body.dark-theme .logs-header {
+    background: #1a1a1a;
+    border-color: #333;
+    color: #999;
+}
+
+.logs-content {
+    padding: 12px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-size: 11px;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', 'Courier New', monospace;
+    color: #333;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 0 0 4px 4px;
+    scroll-behavior: auto;
+    box-sizing: border-box;
+}
+
+body.dark-theme .logs-content {
+    background: #1a1a1a;
+    border-color: #333;
+    color: #ccc;
+}
+
+.logs-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.logs-content::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+.logs-content::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+body.dark-theme .logs-content::-webkit-scrollbar-track {
+    background: #000000;
+}
+
+body.dark-theme .logs-content::-webkit-scrollbar-thumb {
+    background: #333;
+}
+
+.log-line {
+    margin-bottom: 4px;
+}
+
+.log-success {
+    color: #008800;
+    font-weight: 500;
+}
+
+.log-error {
+    color: #cc0000;
+    font-weight: 500;
+}
+
+.log-warn {
+    color: #ff8800;
+    font-weight: 500;
+}
+
+.log-info {
+    color: #666;
+}
+
+body.dark-theme .log-info {
+    color: #999;
+}
+
+body.dark-theme .log-success {
+    color: #00ff00;
+}
+
+body.dark-theme .log-error {
+    color: #ff6666;
+}
+
+body.dark-theme .log-warn {
+    color: #ffaa00;
+}
+
+.app-footer {
+    padding: 12px 20px;
+    border-top: 1px solid #e0e0e0;
+    background: #fff;
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+body.dark-theme .app-footer {
+    background: #0a0a0a;
+    border-top-color: #333;
+    color: #999;
+}
+
+.footer-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00cc00;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+
+/* Mode Select Dropdown */
+.mode-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 600;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: dropdownJitter 3s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+.mode-select::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.mode-select:hover::before {
+    width: 500px;
+    height: 500px;
+}
+
+.mode-select:hover {
+    border-color: #999;
+    animation: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mode-select:focus {
+    outline: none;
+    border-color: #1a1a1a;
+    animation: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mode-select:active {
+    transform: translateY(0) scale(0.98);
+    transition: transform 0.1s;
+}
+
+body.dark-theme .mode-select {
+    background: #1a1a1a;
+    border-color: #333;
+    color: #fff;
+    font-weight: 600;
+}
+
+body.dark-theme .mode-select::before {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .mode-select:hover {
+    border-color: #666;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .mode-select:focus {
+    border-color: #fff;
+}
+
+
+/* Mode hint text */
+.mode-hint {
+    margin: 8px 0 0 0;
+    font-size: 11px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+
+/* Header right section */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Change account button */
+.change-account-btn {
+    padding: 6px 12px;
+    background: #f5f5f5;
+    color: #1a1a1a;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.change-account-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.change-account-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.change-account-btn:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.change-account-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-theme .change-account-btn {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #333;
+}
+
+body.dark-theme .change-account-btn::before {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .change-account-btn:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+
+/* Custom Confirmation Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+}
+
+.modal.hidden {
+    display: none !important;
+}
+
+.modal-content {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    position: relative;
+}
+
+body.dark-theme .modal-content {
+    background: #1a1a1a;
+    border-color: #333;
+}
+
+.modal-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 12px 0;
+}
+
+body.dark-theme .modal-title {
+    color: #fff;
+}
+
+.modal-message {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 20px 0;
+    line-height: 1.5;
+}
+
+body.dark-theme .modal-message {
+    color: #999;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-weight: 500;
+}
+
+.modal-btn-primary {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+.modal-btn-primary:hover {
+    background: #2a2a2a;
+    transform: translateY(-1px);
+}
+
+.modal-btn-primary:active {
+    transform: translateY(0);
+}
+
+body.dark-theme .modal-btn-primary {
+    background: #f5f5f5;
+    color: #1a1a1a;
+}
+
+body.dark-theme .modal-btn-primary:hover {
+    background: #e0e0e0;
+}
+
+.modal-btn-secondary {
+    background: #f5f5f5;
+    color: #1a1a1a;
+    border: 1px solid #ddd;
+}
+
+.modal-btn-secondary:hover {
+    background: #e0e0e0;
+}
+
+.modal-btn-secondary:active {
+    transform: translateY(0);
+}
+
+body.dark-theme .modal-btn-secondary {
+    background: #2a2a2a;
+    color: #fff;
+    border-color: #333;
+}
+
+body.dark-theme .modal-btn-secondary:hover {
+    background: #3a3a3a;
+}
+
+/* Dropdown highlight colors - black instead of blue */
+.target-select option:checked,
+.mode-select option:checked {
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+.target-select option:hover,
+.mode-select option:hover {
+    background: #1a1a1a !important;
+    color: #ffffff !important;
+}
+
+body.dark-theme .target-select option:checked,
+body.dark-theme .mode-select option:checked {
+    background: #ffffff !important;
+    color: #000000 !important;
+}
+
+body.dark-theme .target-select option:hover,
+body.dark-theme .mode-select option:hover {
+    background: #e0e0e0 !important;
+    color: #000000 !important;
+}
+
+/* Checkbox Toggle */
+.checkbox-section {
+    margin-top: -10px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+    font-size: 13px;
+    user-select: none;
+    color: #666;
+    font-weight: 500;
+}
+
+body.dark-theme .checkbox-container {
+    color: #999;
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    height: 18px;
+    width: 18px;
+    background-color: #eee;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.dark-theme .checkmark {
+    background-color: #1a1a1a;
+    border-color: #333;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    background-color: #ccc;
+    border-color: #aaa;
+}
+
+body.dark-theme .checkbox-container:hover input ~ .checkmark {
+    background-color: #2a2a2a;
+    border-color: #555;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background-color: #1a1a1a;
+    border-color: #1a1a1a;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme .checkbox-container input:checked ~ .checkmark {
+    background-color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 6px;
+    top: 2px;
+    width: 4px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+body.dark-theme .checkbox-container .checkmark:after {
+    border-color: black;
+}
+
+/* Account Manager Specific */
+.header-action-btn {
+    padding: 6px 12px;
+    background: #f5f5f5;
+    color: #1a1a1a;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+body.dark-theme .header-action-btn {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #333;
+}
+
+.header-action-btn:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+body.dark-theme .header-action-btn:hover {
+    background: #2a2a2a;
+}
+
+.accounts-modal-content {
+    max-width: 450px;
+    width: 95%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.accounts-list {
+    margin-bottom: 24px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    background: #fafafa;
+}
+
+body.dark-theme .accounts-list {
+    border-color: #333;
+    background: #0d0d0d;
+}
+
+.account-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+}
+
+body.dark-theme .account-item {
+    border-bottom-color: #222;
+}
+
+.account-item:last-child {
+    border-bottom: none;
+}
+
+.account-item:hover {
+    background: #f0f0f0;
+}
+
+body.dark-theme .account-item:hover {
+    background: #151515;
+}
+
+.account-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.acc-display-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+body.dark-theme .acc-display-name {
+    color: #fff;
+}
+
+.acc-alias {
+    font-size: 11px;
+    color: #888;
+}
+
+.acc-active-tag {
+    font-size: 10px;
+    background: #00cc00;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 8px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.account-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.acc-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background: white;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+}
+
+body.dark-theme .acc-btn {
+    background: #1a1a1a;
+    border-color: #333;
+    color: #ccc;
+}
+
+.btn-switch:hover {
+    background: #1a1a1a;
+    color: white;
+    border-color: #1a1a1a;
+}
+
+body.dark-theme .btn-switch:hover {
+    background: white;
+    color: black;
+    border-color: white;
+}
+
+.btn-remove:hover {
+    background: #ff4444;
+    color: white;
+    border-color: #ff4444;
+}
+
+.add-account-section {
+    padding: 16px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    background: #fafafa;
+}
+
+body.dark-theme .add-account-section {
+    background: #0d0d0d;
+    border-color: #333;
+}
+
+.add-account-section h4 {
+    font-size: 13px;
+    margin-bottom: 12px;
+    color: #666;
+}
+
+body.dark-theme .add-account-section h4 {
+    color: #999;
+}
+
+.account-input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'Space Grotesk', sans-serif;
+    background: white;
+}
+
+body.dark-theme .account-input {
+    background: #0a0a0a;
+    border-color: #333;
+    color: #fff;
+}
+
+.cookie-area {
+    min-height: 80px;
+    resize: none;
+    font-family: monospace;
+    font-size: 11px;
+}

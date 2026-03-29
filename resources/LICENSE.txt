@@ -1,0 +1,30 @@
+META Spoofer - Proprietary License
+
+Copyright (c) 2026 Almos and Xix. All rights reserved.
+
+TERMS AND CONDITIONS:
+
+1. PERMITTED USE
+   - You may use this software for personal, non-commercial purposes only
+   - You may modify the source code for your own personal use
+   - You may study the code for educational purposes
+
+2. PROHIBITED ACTIONS
+   - You may NOT sell, rent, lease, this software or any modified versions
+   - You may NOT use this software or modified versions for commercial purposes
+   - You may NOT remove or modify this copyright notice
+   - You may NOT claim this work as your own
+   - You may NOT redistribute the source code or compiled versions without explicit written permission
+
+3. NO WARRANTY
+   This software is provided "as is" without warranty of any kind, express or implied.
+   The authors are not liable for any damages arising from the use of this software.
+
+4. ENFORCEMENT
+   Violation of these terms may result in legal action. By using this software, you agree
+   to these terms and conditions.
+
+For licensing inquiries or permission requests, contact the authors.
+You may distribute this but not for payment it must remain free
+
+Made by Almos and Xix

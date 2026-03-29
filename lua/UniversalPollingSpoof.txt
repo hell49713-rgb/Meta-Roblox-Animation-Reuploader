@@ -1,0 +1,504 @@
+local HttpService = game:GetService("HttpService")
+local MarketplaceService = game:GetService("MarketplaceService")
+local TARGET_GROUP_ID = nil 
+local SERVER_URL = "http://localhost:3000"
+local POLL_INTERVAL = 0.5
+
+local function getGameInfo()
+    local creatorId = game.CreatorId
+    local placeId = game.PlaceId
+    if placeId == 0 then
+        return false, nil, placeId
+    end
+    if creatorId ~= 0 then
+        local isGroup = (game.CreatorType == Enum.CreatorType.Group)
+        return isGroup, creatorId, placeId
+    end
+    local success, result = pcall(function()
+        return MarketplaceService:GetProductInfo(placeId)
+    end)
+    if success and result and result.Creator then
+        local creatorInfo = result.Creator
+        local isGroup = (string.lower(creatorInfo.CreatorType) == "group")
+        return isGroup, creatorInfo.Id, placeId
+    end
+    return false, nil, placeId
+end
+
+local function extractId(assetString)
+    if not assetString or assetString == "" then return nil end
+    local match = string.match(assetString, "%d+")
+    return match
+end
+
+local function isActualAsset(cleanId, assetTypeId)
+    local maxRetries = 3
+    for i = 1, maxRetries do
+        local success, result = pcall(function()
+            return MarketplaceService:GetProductInfo(tonumber(cleanId))
+        end)
+        if success and result then
+            return result.AssetTypeId == assetTypeId
+        elseif not success and string.find(tostring(result), "HTTP 429") then
+            task.wait(1)
+        else
+            return false
+        end
+    end
+    return false
+end
+
+local function harvestAnimations()
+    local descendants = game:GetDescendants()
+    local assetsList = {}
+    local uniqueIds = {}
+    local descendantCount = 0
+    local assetCount = 0
+    
+    print("[META] Scanning Workspace for Animation objects...")
+    for _, inst in ipairs(descendants) do
+        descendantCount = descendantCount + 1
+        if descendantCount % 1000 == 0 then 
+            print("[META] Scanned " .. descendantCount .. " objects... (Found " .. assetCount .. " new animations)")
+            task.wait() 
+        end
+        
+        if inst:IsA("Animation") then
+            local rawId = inst.AnimationId
+            local cleanId = extractId(rawId)
+            if cleanId and uniqueIds[cleanId] ~= true then
+                uniqueIds[cleanId] = true
+                assetCount = assetCount + 1
+                if assetCount % 10 == 0 then task.wait() end
+                
+                print("[META] [+] Discovered Animation: " .. inst.Name .. " (" .. cleanId .. ")")
+                table.insert(assetsList, {
+                    id = cleanId,
+                    name = inst.Name,
+                    creatorType = "user", 
+                    creatorId = "1"       
+                })
+            end
+        end
+    end
+    print("[META] Workspace scan complete. Found " .. assetCount .. " unique Animations.")
+    return assetsList
+end
+
+local function harvestAudio()
+    local descendants = game:GetDescendants()
+    local assetsList = {}
+    local uniqueIds = {}
+    local descendantCount = 0
+    local assetCount = 0
+    
+    print("[META] Scanning Workspace for Sound objects...")
+    for _, inst in ipairs(descendants) do
+        descendantCount = descendantCount + 1
+        if descendantCount % 1000 == 0 then 
+            print("[META] Scanned " .. descendantCount .. " objects... (Found " .. assetCount .. " new sounds)")
+            task.wait() 
+        end
+        
+        if inst:IsA("Sound") then
+            local rawId = inst.SoundId
+            local cleanId = extractId(rawId)
+            if cleanId and uniqueIds[cleanId] == nil then
+                uniqueIds[cleanId] = true
+                assetCount = assetCount + 1
+                if assetCount % 10 == 0 then task.wait() end
+                
+                print("[META] [+] Discovered Sound: " .. inst.Name .. " (" .. cleanId .. ")")
+                table.insert(assetsList, {
+                    id = cleanId,
+                    name = inst.Name,
+                    creatorType = "user", 
+                    creatorId = "1"       
+                })
+            end
+        end
+    end
+    
+    print("[META] Scanning all logic (scripts) for embedded Audio IDs...")
+    descendantCount = 0
+    local scriptCount = 0
+    for _, inst in ipairs(descendants) do
+        descendantCount = descendantCount + 1
+        if descendantCount % 1000 == 0 then task.wait() end
+        
+        if inst:IsA("LuaSourceContainer") then
+            scriptCount = scriptCount + 1
+            if scriptCount % 50 == 0 then
+                print("[META] Scanned " .. scriptCount .. " scripts... (Found " .. assetCount .. " total audio assets)")
+            end
+            
+            local source = inst.Source
+            for numberStr in string.gmatch(source, "%d+") do
+                if string.len(numberStr) >= 7 then
+                    if uniqueIds[numberStr] == nil then
+                        uniqueIds[numberStr] = false 
+                        if isActualAsset(numberStr, 3) then
+                            uniqueIds[numberStr] = true
+                            assetCount = assetCount + 1
+                            if assetCount % 5 == 0 then task.wait() end
+                            
+                            print("[META] [+] Discovered Script Audio: " .. numberStr .. " (found in " .. inst.Name .. ")")
+                            table.insert(assetsList, {
+                                id = numberStr,
+                                name = inst.Name .. "_ScriptAudio",
+                                creatorType = "user",
+                                creatorId = "1"
+                            })
+                        end
+                    end
+                end
+            end
+        end
+    end
+    
+    print("[META] Audio harvest complete. Found " .. assetCount .. " total unique audio assets.")
+    return assetsList
+end
+
+local function harvestScriptAnimations()
+    local descendants = game:GetDescendants()
+    local assetsList = {}
+    local uniqueIds = {}
+    local descendantCount = 0
+    local assetCount = 0
+    
+    print("[META] Scanning all scripts for Animation IDs...")
+    for _, inst in ipairs(descendants) do
+        descendantCount = descendantCount + 1
+        if descendantCount % 1000 == 0 then task.wait() end
+        
+        if inst:IsA("LuaSourceContainer") then
+            local source = inst.Source
+            for numberStr in string.gmatch(source, "%d+") do
+                if string.len(numberStr) >= 7 then
+                    if uniqueIds[numberStr] == nil then
+                        uniqueIds[numberStr] = false 
+                        if isActualAsset(numberStr, 24) then
+                            uniqueIds[numberStr] = true
+                            assetCount = assetCount + 1
+                            if assetCount % 5 == 0 then task.wait() end
+                            
+                            print("[META] [+] Discovered Script Animation: " .. numberStr .. " (found in " .. inst.Name .. ")")
+                            table.insert(assetsList, {
+                                id = numberStr,
+                                name = inst.Name .. "_ScriptAsset",
+                                creatorType = "user",
+                                creatorId = "1"
+                            })
+                        end
+                    end
+                end
+            end
+        end
+    end
+    print("[META] Script Animation harvest complete. Found " .. assetCount .. " unique Animations.")
+    return assetsList
+end
+
+local function performSpoof(mode, makePublic)
+    local modeName = mode or "animation"
+    print("[META] ========================================")
+    print("[META] Starting " .. modeName .. " spoof...")
+    if makePublic then
+        print("[META] Property: MAKE PUBLIC ENABLED")
+    end
+    print("[META] ========================================")
+    
+    local assetsPayload
+    local isSoundMode = false
+    
+    if modeName == "audio" then
+        assetsPayload = harvestAudio()
+        isSoundMode = true
+    elseif modeName == "script" then
+        assetsPayload = harvestScriptAnimations()
+        isSoundMode = false
+    else
+        assetsPayload = harvestAnimations()
+        isSoundMode = false
+    end
+    
+    local totalFound = #assetsPayload
+    if totalFound == 0 then
+        warn("[META] No assets found to spoof.")
+        return false
+    end
+    
+    local isGroup, detectedCreatorId, placeId = getGameInfo()
+    local resolvedGroupId = TARGET_GROUP_ID 
+    
+    if not resolvedGroupId and isGroup and detectedCreatorId then
+        resolvedGroupId = detectedCreatorId
+        print("[META] Targeting Group: " .. tostring(resolvedGroupId))
+    elseif resolvedGroupId then
+        print("[META] Targeting Manual Group Override: " .. tostring(resolvedGroupId))
+    else
+        print("[META] Targeting Personal User account.")
+    end
+    
+    print("[META] Preparing payload for server (" .. totalFound .. " total unique items)...")
+    
+    local body = {
+        targetGroupId = resolvedGroupId,
+        isSoundMode = isSoundMode,
+        isGroup = (resolvedGroupId ~= nil),
+        overridePlaceId = placeId,
+        assets = assetsPayload,
+        makePublic = makePublic
+    }
+    
+    print("[META] Sending request to Application Backend...")
+    local success, response = pcall(function()
+        return HttpService:RequestAsync({
+            Url = SERVER_URL .. "/spoof",
+            Method = "POST",
+            Headers = { ["Content-Type"] = "application/json" },
+            Body = HttpService:JSONEncode(body)
+        })
+    end)
+    
+    if not success then
+        warn("[META] CRITICAL ERROR: Could not connect to application. Is it running?")
+        warn("Response: " .. tostring(response))
+        return false
+    end
+    
+    local parseSuccess, responseData = pcall(function()
+        return HttpService:JSONDecode(response.Body)
+    end)
+    
+    if not parseSuccess then
+        warn("[META] Server Error: Unexpected response format. (Check app logs)")
+        return false
+    end
+    
+    if not response.Success or not responseData.success then
+        warn("[META] Application returned an error: " .. tostring(responseData.error or "Unknown Error"))
+        return false
+    end
+    
+    local mapping = responseData.mapping
+    if not mapping then
+        warn("[META] Error: No mapping data received.")
+        return false
+    end
+    
+    print("[META] SUCCESS: All assets reuploaded! Starting local ID replacement in Roblox Studio...")
+    
+    local replacedCount = 0
+    local totalFoundCount = 0
+    local replacedAssetsTable = {}
+    
+    -- Count total instances to replace for progress log
+    local descendants = game:GetDescendants()
+    local totalObjects = #descendants
+    
+    print("[META] Scanning Workspace again to apply new IDs to " .. totalObjects .. " objects...")
+    
+    if modeName == "audio" then
+        for i, inst in ipairs(descendants) do
+            if i % 1000 == 0 then task.wait() end
+            
+            if inst:IsA("Sound") then
+                local rawId = inst.SoundId
+                local cleanId = extractId(rawId)
+                if cleanId then
+                    local newId = mapping[tostring(cleanId)]
+                    if newId then
+                        inst.SoundId = "rbxassetid://" .. tostring(newId)
+                        replacedCount = replacedCount + 1
+                        print("[META] [" .. replacedCount .. "] Replaced Sound: " .. inst:GetFullName() .. " (Now: " .. tostring(newId) .. ")")
+                    end
+                end
+            end
+        end
+    else
+        for i, inst in ipairs(descendants) do
+            if i % 1000 == 0 then task.wait() end
+            
+            if inst:IsA("Animation") then
+                local rawId = inst.AnimationId
+                local cleanId = extractId(rawId)
+                if cleanId then
+                    local newId = mapping[tostring(cleanId)]
+                    if newId then
+                        inst.AnimationId = "rbxassetid://" .. tostring(newId)
+                        replacedCount = replacedCount + 1
+                        print("[META] [" .. replacedCount .. "] Replaced Animation: " .. inst:GetFullName() .. " (Now: " .. tostring(newId) .. ")")
+                    end
+                end
+            end
+        end
+    end
+    
+    print("[META] Replaced " .. replacedCount .. " physical object IDs. Now scanning scripts...")
+    
+    local scriptReplaceCount = 0
+    for i, inst in ipairs(descendants) do
+        if i % 1000 == 0 then task.wait() end
+        
+        if inst:IsA("LuaSourceContainer") then
+            local originalSource = inst.Source
+            local newSource = originalSource
+            local changed = false
+            for cleanId, newIdStr in pairs(mapping) do
+                if string.find(newSource, cleanId) then
+                    local padded = " " .. newSource .. " "
+                    local pattern = "([^%w_])(" .. cleanId .. ")([^%w_])"
+                    local repCountTotal = 0
+                    local iters = 0
+                    local rep, count = string.gsub(padded, pattern, "%1" .. tostring(newIdStr) .. "%3")
+                    while count > 0 and iters < 100 do
+                        iters = iters + 1
+                        repCountTotal = repCountTotal + count
+                        padded, count = string.gsub(rep, pattern, "%1" .. tostring(newIdStr) .. "%3")
+                        rep = padded
+                    end
+                    if repCountTotal > 0 then
+                        newSource = string.sub(padded, 2, -2)
+                        changed = true
+                    end
+                end
+            end
+            if changed then
+                inst.Source = newSource
+                scriptReplaceCount = scriptReplaceCount + 1
+                print("[META] [+] Patched Script: " .. inst:GetFullName() .. " (Replaced IDs)")
+            end
+        end
+    end
+    
+    print("[META] ========================================")
+    print("[META] SPOOF COMPLETE!")
+    print("[META] Objects Replaced: " .. replacedCount)
+    print("[META] Scripts Patched: " .. scriptReplaceCount)
+    print("[META] Total operations: " .. (replacedCount + scriptReplaceCount))
+    print("[META] ========================================")
+    return true
+end
+
+local function pingServer()
+    pcall(function()
+        HttpService:RequestAsync({
+            Url = SERVER_URL .. "/ping",
+            Method = "POST"
+        })
+    end)
+end
+
+local isSpoofingInProgress = false
+
+print("[META] Universal Polling system started. Waiting for trigger...")
+print("[META] Press 'Run META' button in the tool to start spoofing.")
+print("[META] Testing HTTP connection to server...")
+local testSuccess, testResponse = pcall(function()
+    return HttpService:RequestAsync({
+        Url = SERVER_URL .. "/ping",
+        Method = "POST"
+    })
+end)
+
+if testSuccess then
+    print("[META] ✓ HTTP connection successful!")
+else
+    warn("[META] ✗ HTTP connection FAILED: " .. tostring(testResponse))
+    warn("[META] Make sure HttpService is enabled in Game Settings!")
+end
+
+local running = true
+local pollCount = 0
+task.spawn(function()
+    while running do
+        pollCount = pollCount + 1
+        
+        if pollCount % 5 == 0 then
+            pingServer()
+        end
+        
+        local success, response = pcall(function()
+            return HttpService:RequestAsync({
+                Url = SERVER_URL .. "/check-trigger",
+                Method = "GET"
+            })
+        end)
+        
+        if not success then
+            if pollCount == 1 or pollCount % 10 == 0 then
+                warn("[META] Poll #" .. pollCount .. " - Failed to contact server: " .. tostring(response))
+            end
+        elseif response.Success then
+            local parseSuccess, data = pcall(function()
+                return HttpService:JSONDecode(response.Body)
+            end)
+            
+            if not parseSuccess then
+                warn("[META] Failed to parse server response: " .. tostring(data))
+            else
+                -- Print logs from server
+                if data.logs and #data.logs > 0 then
+                    for _, msg in ipairs(data.logs) do
+                        -- Clean up prefix for a better studio look
+                        local cleanMsg = tostring(msg)
+                        if string.find(cleanMsg, "%[INFO%]") then
+                            print(cleanMsg)
+                        elseif string.find(cleanMsg, "%[SUCCESS%]") then
+                            print(cleanMsg)
+                        elseif string.find(cleanMsg, "%[ERROR%]") or string.find(cleanMsg, "%[WARN%]") then
+                            warn(cleanMsg)
+                        else
+                            print(cleanMsg)
+                        end
+                    end
+                end
+
+                if data.shouldSpoof then
+                    if isSpoofingInProgress then
+                        print("[META] Trigger received but a spoof is already in progress. Skipping...")
+                    else
+                        local mode = data.mode or "animation"
+                        local makePublic = data.makePublic or false
+                        print("[META] ========================================")
+                        print("[META] TRIGGER RECEIVED!")
+                        print("[META] Mode from server: " .. tostring(mode))
+                        print("[META] ========================================")
+                        
+                        -- RUN IN SEPARATE THREAD SO WE CAN CONTINUE POLLING LOGS!
+                        task.spawn(function()
+                            isSpoofingInProgress = true
+                            local success = pcall(function()
+                                performSpoof(mode, makePublic)
+                            end)
+                            isSpoofingInProgress = false
+                            if not success then
+                                warn("[META] Critical error in performSpoof process!")
+                            end
+                        end)
+                    end
+                else
+                    if pollCount == 1 then
+                        print("[META] Poll #1 - Waiting for trigger... (shouldSpoof = false)")
+                    end
+                end
+            end
+        else
+            if pollCount % 10 == 0 then
+                warn("[META] Server returned error status: " .. tostring(response.StatusCode))
+            end
+        end
+        
+        -- Use faster polling if we are currently spoofing to get logs quicker
+        local currentWait = POLL_INTERVAL
+        if isSpoofingInProgress then
+            currentWait = 0.1
+        end
+        
+        task.wait(currentWait)
+    end
+end)
+
+print("[META] Universal Polling active. Ready to spoof in any mode!")

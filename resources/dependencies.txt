@@ -1,0 +1,11 @@
+chalk
+cli-progress
+cli-table3
+cors
+express
+figlet
+gradient-string
+open
+ora
+electron
+electron-builder
